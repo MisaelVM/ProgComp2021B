@@ -2,30 +2,34 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
- 
+
 std::vector<std::vector<int>> two_sum(std::vector<int>& nums, int k, int j = 0) {
-   	std::vector<std::vector<int>> tuplet;
-    std::unordered_map<int, int> H;
-    for (int i = j; i < (int)nums.size(); ++i) {
-	    if (H.find(k - nums[i]) != H.end())
-		    tuplet.push_back({ nums[H[k - nums[i]]], nums[i] });
-	    H[nums[i]] = i;
-    }
-    return tuplet;
+	std::vector<std::vector<int>> tuplet;
+	std::unordered_map<int, int> H;
+	for (int i = j; i < (int)nums.size(); ++i) {
+		if (H.find(k - nums[i]) != H.end()) {
+			tuplet.push_back({ nums[H[k - nums[i]]], nums[i] });
+			while (i + 1 < (int)nums.size() && nums[i] == nums[i + 1])
+				++i;
+		}
+		H[nums[i]] = i;
+	}
+	return tuplet;
 }
 
 std::vector<std::vector<int>> three_sum(std::vector<int>& nums) {
 	std::vector<std::vector<int>> triplets;
-   	for (int i = 0; i < (int)nums.size(); ++i) {
-    	std::vector<std::vector<int>> indexes = two_sum(nums, -nums[i], i + 1);
-	    for (auto& tup : indexes) {
-   			tup.push_back(nums[i]);
-    		std::sort(tup.begin(), tup.end());
-	    	if (std::find(triplets.begin(), triplets.end(), tup) == triplets.end())
-		    	triplets.push_back(tup);
-	    }
-    }
-    return triplets;
+	std::sort(nums.begin(), nums.end());
+
+	for (int i = 0; i < (int)nums.size() && nums[i] <= 0; ++i) {
+		if (i == 0 || nums[i - 1] != nums[i]) {
+			std::vector<std::vector<int>> indexes = two_sum(nums, -nums[i], i + 1);
+			for (auto& tup : indexes)
+				triplets.push_back({ nums[i], tup[0], tup[1] });
+		}
+	}
+	
+	return triplets;
 }
 
 void print_vector(const std::vector<int>& v) {
