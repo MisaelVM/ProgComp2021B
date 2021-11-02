@@ -1,24 +1,29 @@
 #include <iostream>
 #include <vector>
-#include <set>
+#include <queue>
 #include <utility>
 
 std::vector<int> even_and_odd(const std::vector<int>& nums) {
 	std::vector<int> even_odds;
 
-	std::set<int> evens;
-	std::set<int, std::greater<int>> odds;
+	std::priority_queue<int, std::vector<int>, std::greater<int>> evens;
+	std::priority_queue<int> odds;
 
 	for (auto& i : nums)
 		if (i & 1)
-			odds.insert(i);
+			odds.push(i);
 		else
-			evens.insert(i);
+			evens.push(i);
 	
-	for (auto& i : evens)
-		even_odds.push_back(i);
-	for (auto& i : odds)
-		even_odds.push_back(i);
+	while (!evens.empty()) {
+		even_odds.push_back(evens.top());
+		evens.pop();
+	}
+
+	while (!odds.empty()) {
+		even_odds.push_back(odds.top());
+		odds.pop();
+	}
 
 	return even_odds;
 }
