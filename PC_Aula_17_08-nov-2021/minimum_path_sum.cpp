@@ -1,27 +1,5 @@
 #include <bits/stdc++.h>
 
-/*int mps(std::vector<std::vector<int>>& grid, int m, int n) {
-	if (m == 0 && n == 0)
-		return grid[m][n];
-
-	if (m == 0)
-		return grid[m][n] + mps(grid, m, n - 1);
-
-	if (n == 0)
-		return grid[m][n] + mps(grid, m - 1, n);
-
-	int tmp1 = grid[m][n] + mps(grid, m, n - 1);
-	int tmp2 = grid[m][n] + mps(grid, m - 1, n);
-	return std::min(tmp1, tmp2);
-}
-
-int minPathSum(std::vector<std::vector<int>>& grid) {
-	int m = grid.size() - 1;
-	int n = grid[0].size() - 1;
-
-	return mps(grid, m, n);
-}*/
-
 int minPathSum_memoized(std::vector<std::vector<int>>& grid, int m, int n, std::vector<std::vector<int>>& memo) {
 	if (memo[m][n] != -1)
 		return memo[m][n];
