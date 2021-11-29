@@ -1,27 +1,28 @@
 #include <bits/stdc++.h>
 
 int ride_elevator(int n, int x, std::vector<int>& w) {
-	int rides = 0;
-
-	std::sort(w.begin(), w.end(), std::greater<int>());
-
-	std::vector<int> RE(n);
-
-	int i, j;
-	for (i = 0; i < n; ++i) {
-		for (j = 0; j < rides; ++j)
-			if (RE[j] >= w[i]) {
-				RE[j] = RE[j] - w[i];
-				break;
+	std::vector<std::pair<int, int>> RE(1 << n);
+	RE[0] = { 1, 0 };
+	for (int s = 1; s < (1 << n); ++s) {
+		// Valor inicial: se necesitan n+1 viajes en ascensor
+		RE[s] = { n + 1, 0 };
+		for (int p = 0; p < n; ++p) {
+			if (s & (1 << p)) {
+				auto option = RE[s ^ (1 << p)];
+				if (option.second + w[p] <= x) {
+					// Agregando p a un viaje en ascensor
+					option.second += w[p];
+				}
+				else {
+					// Reservando un nuevo viaje en ascensor para p
+					++option.first;
+					option.second = w[p];
+				}
+				RE[s] = std::min(RE[s], option);
 			}
-
-		if (j == rides) {
-			RE[rides] = x - w[i];
-			++rides;
 		}
 	}
-
-	return rides;	
+	return RE[(1 << n) - 1].first;
 }
 
 int main()
